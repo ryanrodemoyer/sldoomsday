@@ -16,7 +16,30 @@
 
       </div>
     </div>
-    
+
+
+    <div class="row">
+      <div class="col">
+
+        <h3 class="mt-5">
+          Is this scary for you?
+        </h3>
+        <p>
+          On July 2nd, 2015 Microsoft announced the end-of-life for Silverlight.
+        </p>
+        <p>
+          We are {{percentElapsedToDc}}% to {{dcDateFormatted}}.
+        </p>
+        <p>
+          We are {{percentElapsedToEol}}% to {{eolDateFormatted}}.
+        </p>
+        <p>
+          There have been {{toCalendarDays(nowAnnouncedDiff)}} days since {{announcedDateFormatted}}, the day Silverlight died.
+        </p>
+
+      </div>
+    </div>
+
     <div class="row">
 
       <div class="col-6">
@@ -75,8 +98,9 @@
       return {
         autoCount: 0,
         state: {
-          eolDate: new Date(Date.UTC(2021,9,1,6)),
-          dcDate: new Date(Date.UTC(2021,3,12,6)),
+          announcedDate: new Date(Date.UTC(2015, 6, 2, 6)),
+          eolDate: new Date(Date.UTC(2021, 9, 1, 6)),
+          dcDate: new Date(Date.UTC(2021, 3, 12, 6)),
         },
         ui: {
           now: new Date(),
@@ -94,12 +118,30 @@
       dcDateFormatted() {
         return this.toFormattedDate(this.state.dcDate);
       },
+      announcedDateFormatted() {
+        return this.toFormattedDate(this.state.announcedDate);
+      },
       nowThenDiff() {
         return this.state.eolDate - this.ui.now;
       },
       nowDcDiff() {
         return this.state.dcDate - this.ui.now;
       },
+      nowAnnouncedDiff() {
+        return this.ui.now - this.state.announcedDate;
+      },
+      percentElapsedToDc() {
+        const numerator = this.ui.now.getTime() - this.state.announcedDate.getTime();
+        const denominator = this.state.dcDate.getTime() - this.state.announcedDate.getTime();
+        const result = (numerator / denominator) * 100;
+        return result.toFixed(5);
+      },
+      percentElapsedToEol() {
+        const numerator = this.ui.now.getTime() - this.state.announcedDate.getTime();
+        const denominator = this.state.eolDate.getTime() - this.state.announcedDate.getTime();
+        const result = (numerator / denominator) * 100;
+        return result.toFixed(5);
+      }
       //toHours() {
       //  return this.calendar.eolDate.get
       //},
